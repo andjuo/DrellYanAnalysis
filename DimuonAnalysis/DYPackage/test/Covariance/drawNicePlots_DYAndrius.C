@@ -23,7 +23,7 @@ TFile * openFile(bool isDcache, char *file_name);
 //void printTheOutput(TH2D * getThisHisto, bool printContent_orErr, string name_str,  ofstream &outputFile);
 void testMe(void);
 
-void drawNicePlots_DYStoyan(std::string caseAna = "1D", std::string channel = "mu"){
+void drawNicePlots_DYAndrius(std::string caseAna = "1D", std::string channel = "mu"){
   string whichSignMu = "";// both
   //string whichSignMu = "pos";
   //string whichSignMu = "neg";
@@ -39,7 +39,7 @@ void drawNicePlots_DYStoyan(std::string caseAna = "1D", std::string channel = "m
   string MyFileName ;
   string MyFullPath;
   char *file_name;
-  MyFileName = "effCorr_12.09.13.root";
+  MyFileName = "effCorr_2D_case_26.10.12.root";
 
   MyFullPath =  MyDirectory +  MySubDirectory + MyFileName;
   file_name = MyFullPath.c_str();
@@ -48,8 +48,8 @@ void drawNicePlots_DYStoyan(std::string caseAna = "1D", std::string channel = "m
 
 
   char *file_name;
-  MyFileName = "covariance_finalResults_1D_mu_preFSR_fullAcc_normalized.root";
-  //MyFileName = "covariance_finalResults_2D_mu_preFSR_inAcc_normalized.root";
+  //MyFileName = "covariance_finalResults_1D.root"; //covariance2D_finalResults_26.10.12.root";
+  MyFileName = "../covAndrius/Covariance/covariance_finalResults_1D_mu_preFSR_fullAcc_loadRhoRho100_noAccSyst_normalized-13binErr.root";
   MyFullPath =  MyDirectory +  MySubDirectory + MyFileName;
   file_name = MyFullPath.c_str();
   TFile *f2 = openFile(isDcache, file_name);
@@ -65,118 +65,19 @@ void drawNicePlots_DYStoyan(std::string caseAna = "1D", std::string channel = "m
   DataFiles_names.push_back(f1_output);
   DataFiles_names.push_back(f2_output);
 
-  string  histo_1 = "effCorrelations";
-  string  histo_2 = "effCorrelations_bins";
-  string  histo_3 = "effCorrelations_NORM";
-  string  histo_4 = "effCorrelations_bins_NORM";
-  string  histo_5 = "effCorrelations_2D_bins";
-  string  histo_6 = "effCorrelations_2D_bins_NORM";
+  string  str_tm_8 = "totalCov_TM";
 
-  string  str_tm_1 = "unfoldCov_TM";
-  string  str_tm_2 = "effCov_TM";
-  string  str_tm_3 = "fsrCov_TM";
-  string  str_tm_4 = "totalCov_TM";
-
-  TH2D * h2_p1 = (TH2D*)(DataFiles[0])->Get(histo_1.c_str());
-  TH2D * h2_p2 = (TH2D*)(DataFiles[0])->Get(histo_2.c_str());  
-  TH2D * h2_p3 = (TH2D*)(DataFiles[0])->Get(histo_3.c_str());  
-  TH2D * h2_p4 = (TH2D*)(DataFiles[0])->Get(histo_4.c_str());  
-  TH2D * h2_p5 = (TH2D*)(DataFiles[0])->Get(histo_5.c_str());  
-  TH2D * h2_p6 = (TH2D*)(DataFiles[0])->Get(histo_6.c_str()); 
-
-  std::string nameHist = "Efficiency correlations between mass bins - 1D; mass (GeV); mass (GeV)";
-  h2_p1->SetTitle(nameHist.c_str()); 
-  h2_p1->Draw("colz");
-  //return;  
-  nameHist = "Efficiency correlations between mass bins - 1D; mass bin number; mass bin number";
-  h2_p2->Draw("colz");
-  //return;  
-  nameHist = "Efficiency correlations between mass bins - 1D, normalized; mass (GeV); mass (GeV)";
-  h2_p3->Draw("colz");
-  //return;  
-  nameHist = "Efficiency correlations between mass bins - 1D, normalized; mass bin number; mass bin number";
-  h2_p4->Draw("colz");
-  //return;  
-  nameHist = "Efficiency correlations between mass+rapidity bins - 1D; mass+rapidity bin number; mass+rapidity bin number";
-  h2_p5->Draw("colz");
-  //return;  
-  nameHist = "Efficiency correlations between mass+rapidity bins - 1D, normalized; mass+rapidity bin number; mass+rapidity bin number";
-  h2_p6->Draw("colz");
-  //return;  
-  
   std::string binStr = "mass bin; mass bin";
   std::string binStr_single = "mass bin";
   if("2D" == caseAna){
      binStr = "mass-rapidity bin; mass-rapidity bin";
      binStr_single = "mass-rapidity bin";
   }
-  //TCanvas *c3 = new TCanvas("c3", "canvas 3",16,30,1000,600);
-  TMatrixT <double> *tm_1  = (TMatrixT <double> *)(DataFiles[1])->Get(str_tm_1.c_str());;  
-  TH2D *h2_tm_1 = new TH2D (*tm_1);
-  //nameHist = "Unfolding covariance matrix - 2D; mass+rapidity bin number; mass+rapidity bin number";
-  nameHist = "Unfolding covariance matrix;";
-  nameHist+=binStr;
-  h2_tm_1->SetTitle(nameHist.c_str()); 
-  h2_tm_1->Draw("colz"); 
-  //return; 
-  TMatrixT <double> *tm_2  = (TMatrixT <double> *)(DataFiles[1])->Get(str_tm_2.c_str());;  
-  TH2D *h2_tm_2 = new TH2D (*tm_2);
-  //nameHist = "Efficiancy covariance matrix - 2D; mass+rapidity bin number; mass+rapidity bin number";
-  nameHist = "Efficiency covariance matrix;";
-  nameHist+=binStr;
-  h2_tm_2->SetTitle(nameHist.c_str()); 
-  h2_tm_2->Draw("colz"); 
-  //return; 
-  TMatrixT <double> *tm_3  = (TMatrixT <double> *)(DataFiles[1])->Get(str_tm_3.c_str());;  
-  TH2D *h2_tm_3 = new TH2D (*tm_3);
-  //nameHist = "FSR covariance matrix - 2D; mass+rapidity bin number; mass+rapidity bin number";
-  nameHist = "FSR covariance matrix;";
-  nameHist+=binStr;
-  h2_tm_3->SetTitle(nameHist.c_str()); 
-  h2_tm_3->Draw("colz"); 
-  //return; 
-  TMatrixT <double> *tm_4  = (TMatrixT <double> *)(DataFiles[1])->Get(str_tm_4.c_str());;  
-  TH2D *h2_tm_4 = new TH2D (*tm_4);
-  //nameHist = "Total covariance matrix;  mass-rapidity bin; mass-rapidity bin";
-  nameHist = "Total covariance matrix;";
-  nameHist+=binStr;
-  h2_tm_4->SetTitle(nameHist.c_str()); 
-  h2_tm_4->Draw("colz"); 
-  //return; 
-
-  string  str_tm_5 = "unfoldCorr_TM";
-  string  str_tm_6 = "effCorr_TM";
-  string  str_tm_7 = "fsrCorr_TM";
-  string  str_tm_8 = "totalCorr_TM";
-
-  TMatrixT <double> *tm_5  = (TMatrixT <double> *)(DataFiles[1])->Get(str_tm_5.c_str());;  
-  TH2D *h2_tm_5 = new TH2D (*tm_5);
-  nameHist = "Unfolding correlation matrix;";
-  nameHist+=binStr;
-  h2_tm_5->SetTitle(nameHist.c_str()); 
-  h2_tm_5->Draw("colz"); 
-  //return; 
-  //
-  TMatrixT <double> *tm_6  = (TMatrixT <double> *)(DataFiles[1])->Get(str_tm_6.c_str());;  
-  TH2D *h2_tm_6 = new TH2D (*tm_6);
-  nameHist = "Efficiency correlation matrix;";
-  nameHist+=binStr;
-  h2_tm_6->SetTitle(nameHist.c_str()); 
-  h2_tm_6->Draw("colz"); 
-  //return; 
-  //
-  TMatrixT <double> *tm_7  = (TMatrixT <double> *)(DataFiles[1])->Get(str_tm_7.c_str());;  
-  TH2D *h2_tm_7 = new TH2D (*tm_7);
-  nameHist = "FSR correlation matrix;";
-  nameHist+=binStr;
-  h2_tm_7->SetTitle(nameHist.c_str()); 
-  h2_tm_7->Draw("colz"); 
-  //return; 
   //
   gPad->SetRightMargin(0.12);
   TMatrixT <double> *tm_8  = (TMatrixT <double> *)(DataFiles[1])->Get(str_tm_8.c_str());;  
   TH2D *h2_tm_8 = new TH2D (*tm_8);
-  nameHist = "Total correlation matrix;";
+  string nameHist = "Total correlation matrix;";
   nameHist+=binStr;
  // h2_tm_8->SetTitle(nameHist.c_str()); 
   h2_tm_8->GetXaxis()->SetTitle(binStr_single.c_str());
@@ -185,14 +86,15 @@ void drawNicePlots_DYStoyan(std::string caseAna = "1D", std::string channel = "m
   h2_tm_8->GetYaxis()->SetTitleOffset(1.25);
   h2_tm_8->GetXaxis()->SetTitleSize(0.04);
   h2_tm_8->GetYaxis()->SetTitleSize(0.04);
-  //h2_tm_8->SetTitle("CMS Preliminary, 4.5 fb^{-1} at #sqrt{s} = 7 TeV");
+  h2_tm_8->SetTitle("CMS Preliminary, 4.5 fb^{-1} at #sqrt{s} = 7 TeV");
   gStyle->SetTitleW(0.4);
   gStyle->SetTitleH(0.07);
   gStyle->SetTitleX(0.5);
   gStyle->SetTitleY(0.97);
   h2_tm_8->Draw("colz"); 
+  bluePrintOut(h2_tm_8);
+  //return; 
   //
-
   TPaveText *pt = new TPaveText(0.75,0.77,0.78,0.80,"brNDC");
   pt->SetFillColor(0);
   pt->SetTextFont(42);
@@ -379,7 +281,7 @@ void testMe(void) {
   //tdrStyle->SetTitleX(0.13);
   //tdrStyle->SetTitleY(0.975);
  //hres->SetTitleSize(0.1);
-  hres->SetTitle("CMS Preliminary, 4.5 fb^{-1} at #sqrt{s} = 7 TeV");
+  hres->SetTitle("at #sqrt{s} = 7 TeV, CMS Preliminary");
   gStyle->SetTitleW(0.4);
   gStyle->SetTitleH(0.07);
   gStyle->SetTitleX(0.5);
@@ -446,3 +348,21 @@ void testMe(void) {
 
   //c2->Print("eps/resMatrix_"+_trig+"_"+_corr+".eps");
 }
+
+void bluePrintOut(TH2D* hprototype) {
+
+        for (int i = 0; i < hprototype->GetXaxis()->GetNbins(); i++) {
+           for (int j = 0; j < hprototype->GetYaxis()->GetNbins(); j++) {
+                //if (i==j) {
+                //if (i > 37 && j > 37) {
+                //   cout << i+1 << " " << j+1 << " " << 1./250.*hprototype->GetBinContent(i+1,j+1)  << endl;
+                //} else {
+                   cout << i+1 << " " << j+1 << " " << hprototype->GetBinContent(i+1,j+1)  << endl;
+                //} 
+                //} else {
+                //   cout << i+1 << " " << j+1 << " 0.0" << endl;
+                //}
+           }
+        }
+}
+

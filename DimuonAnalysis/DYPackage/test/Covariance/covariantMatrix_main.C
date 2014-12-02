@@ -63,8 +63,8 @@ void singleUnfoldingCovariance( TMatrixT <double> &  responseMatrix,
 				TMatrixT <double>  & dataErr_TM,  
 				TMatrixT <double> & unfoldCov_TM
 				TMatrixT <double> & unfoldCorr_TM);
-const int theNBins = 41;
-Double_t mBins[theNBins+1] = {15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 64, 68, 72, 76, 81, 86, 91, 96, 101, 106, 110, 115, 120, 126, 133, 141, 150, 160, 171, 185, 200, 220, 243, 273, 320, 380, 440, 510, 600, 1000, 1500, 2000};
+const int theNBins = 40;
+Double_t mBins[theNBins+1] = {15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 64, 68, 72, 76, 81, 86, 91, 96, 101, 106, 110, 115, 120, 126, 133, 141, 150, 160, 171, 185, 200, 220, 243, 273, 320, 380, 440, 510, 600, 1000, 1500};
 
 std::string directoryName_mu =  "./"; //"/data/stoyan/DY/muCovInputs_14.03.13/";
 std::string directoryName_el =  "./";
@@ -74,18 +74,18 @@ double smallNumber = 1E-9;
 
 double normalization_data_2D_mu = 563.9;  //524.7;
 double normalization_Theory_2D_mu = 569.7;//534.29;
-double normalization_data_1D = 1134.6;     //989.5;//mu
+double normalization_data_1D = 1150.2;     //989.5;//mu
 double normalization_Theory_1D = 1137.2;   //970.0;
 
 
-void writeEffCorrToRootFile(std::string resultType  = "2D", std::string channel = "mu"){
+void writeEffCorrToRootFile(std::string resultType  = "1D", std::string channel = "el"){
   std::string directoryName = directoryName_mu;
   if("el" == channel){
     directoryName = directoryName_el;
   }
   std::string file_name =  "effCorr_12.09.13.root";
   if("mu"==channel){
-      file_name =  "2_split_41bin.root"; //"effCorr_1D_case_01.11.12.root"; //"effCorr_12.09.13.root";
+      file_name =  "2_split.root"; //"effCorr_1D_case_01.11.12.root"; //"effCorr_12.09.13.root";
   } else{
       if("2D"!=resultType) file_name = "covRhoFile_el1D_100exps_nMB41_egamma_asymHLT_Unregressed_energy-allSyst.root";
       else file_name = "covRhoFile_el2D_100exps_nMB7_egamma_asymHLT_Unregressed_energy-allSyst.root";
@@ -98,7 +98,7 @@ void writeEffCorrToRootFile(std::string resultType  = "2D", std::string channel 
   std::vector< TFile * > DataFiles;
   DataFiles.push_back(f1);
 
-  int const nBins = 41;
+  int const nBins = 40;
   std::string effHisto_name = "effCorrelations_bins_NORM";
   if("mu"!=channel){
     effHisto_name = "corrRhoRho";
@@ -160,7 +160,7 @@ void writeEffCorrToRootFile(std::string resultType  = "2D", std::string channel 
   cout<<"Output written to "<<fileName<<std::endl;
 }
 //
-void writeShapeToRootFile(std::string resultType  = "2D", std::string channel = "mu", 
+void writeShapeToRootFile(std::string resultType  = "1D", std::string channel = "el", 
 			  std::string acc = "fullAcc", std::string fsr = "preFSR" ){
   std::cout<<" Writing shape for the case: "<<resultType<<" "<<channel<<" "<<acc <<" "<< fsr <<std::endl;
   std::string directoryName = directoryName_mu;
@@ -171,12 +171,12 @@ void writeShapeToRootFile(std::string resultType  = "2D", std::string channel = 
   if (resultType == "2D") acc = "inAcc";
 
   std::string inputFileName = "r2D_preFSR_inAcc_mu_03.04.14.dat";
-  if ("el"==channel) inputFileName = "r2D_preFSR_inAcc_el_03.04.14.dat";
+  if ("el"==channel) inputFileName = "r2D_preFSR_inAcc_mu_26.03.13.dat";
   if("1D"==resultType){
     if("mu"==channel){
       if("fullAcc" == acc){
 	if("preFSR" == fsr){
-	  inputFileName = "r1D_preFSR_fullPhS_mu_03.04.14_41bin.dat";
+	  inputFileName = "r1D_preFSR_fullPhS_mu_03.04.14.dat";
 	}
 	else{
 	  inputFileName = "r1D_postFSR_fullPhS_mu_14.03.13.dat";
@@ -223,7 +223,7 @@ void writeShapeToRootFile(std::string resultType  = "2D", std::string channel = 
 
   int allBins = 132;
   if("1D"==resultType){
-    allBins = 41;
+    allBins = 40;
   }
   int const nBins = allBins;
 
@@ -357,7 +357,7 @@ void writeTheoryToRootFile(std::string resultType  = "1D", std::string channel =
 
   int allBins = 132;
   if("1D"==resultType){
-    allBins = 41;
+    allBins = 40;
   }
   int const nBins = allBins;
 
@@ -412,7 +412,7 @@ void writeTheoryToRootFile(std::string resultType  = "1D", std::string channel =
 
 ///
 
-void writeSystToRootFile(std::string resultType  = "2D", std::string channel = "mu",
+void writeSystToRootFile(std::string resultType  = "1D", std::string channel = "el",
 			 std::string acc = "fullAcc", std::string fsr = "preFSR"){
   std::cout<<" Writing Syst. for the case: "<<resultType<<" "<<channel<<" "<<acc <<" "<< fsr <<std::endl;
   std::string directoryName = directoryName_mu;
@@ -425,12 +425,12 @@ void writeSystToRootFile(std::string resultType  = "2D", std::string channel = "
   std::string inputFileName = "r2D_syst_preFSR_inAcc_mu_03.04.14.dat";
   directoryName = "./";
   //FIXME put electron case 
-  if (channel != "mu") inputFileName = "r2D_syst_preFSR_inAcc_el_03.04.14.dat";
+  if (channel != "mu") inputFileName = "r2D_syst_preFSR_inAcc_mu_26.03.13.dat";
   if("1D"==resultType){
     if("mu"==channel){
       if("fullAcc" == acc){
 	if("preFSR" == fsr){
-	  inputFileName = "r1D_syst_preFSR_fullPhS_mu_03.04.14_41bin.dat";
+	  inputFileName = "r1D_syst_preFSR_fullPhS_mu_03.04.14.dat";
           //inputFileName = "r1D_syst_preFSR_fullPhS_mu_14.03.13.dat";
 	  directoryName = "./";
 	}
@@ -452,7 +452,7 @@ void writeSystToRootFile(std::string resultType  = "2D", std::string channel = "
       //inputFileName = "r1D_syst_preFSR_fullPhS_el_20121122.dat";
       if("fullAcc" == acc){
 	if("preFSR" == fsr){
-	  inputFileName = "r1D_syst_preFSR_fullPhS_mu_03.04.14_41bin.dat";
+	  inputFileName = "r1D_syst_preFSR_fullPhS_mu_03.04.14.dat";
 	}
 	else{
 	  inputFileName = "dummy.dat";
@@ -493,7 +493,7 @@ void writeSystToRootFile(std::string resultType  = "2D", std::string channel = "
 
  int allBins = 132;
   if("1D"==resultType){
-    allBins = 41;
+    allBins = 40;
   }
   int const nBins = allBins;
 
@@ -587,7 +587,7 @@ void writeSystToRootFile(std::string resultType  = "2D", std::string channel = "
   return;
 }
 //
-void estimateCovMatrix(std::string resultType  = "2D", std::string channel = "mu",
+void estimateCovMatrix(std::string resultType  = "1D", std::string channel = "el",
 		       std::string acc = "fullAcc", std::string fsr = "preFSR", std::string resultR = "unnormalized"){// "2D", "1D"
 
   if (resultType == "2D") acc = "inAcc";
@@ -608,17 +608,17 @@ void estimateCovMatrix(std::string resultType  = "2D", std::string channel = "mu
   TFile *f1=
     (TFile*)gROOT->GetListOfFiles()->FindObject(file_name.c_str());
   TFile *f1 = new TFile(file_name.c_str());
-  file_name = "massResolUnfold_2014_41bin.root";
+  file_name = "massResolUnfold_2014.root";
   if("1D"==resultType){
-   // if("mu"==channel){
-      file_name = "massResolUnfold_2014_41bin.root";
-   // }
-   // else{
-   //   file_name = "resMatrixProdEE_1D_2014.root";
+    if("mu"==channel){
+      file_name = "massResolUnfold_2014.root";
+    }
+    else{
+      file_name = "resMatrixProdEE_1D_2014.root";
       //file_name = "dyee_detResponse_1D-20121122.root";
-   // }
+    }
   } else {
-    // if ("mu"!=channel) file_name = "resMatrixProdEE_2D.root";
+     if ("mu"!=channel) file_name = "resMatrixProdEE_2D.root";
   }
   file_name = directoryName + file_name;
   TFile *f2=
@@ -628,15 +628,15 @@ void estimateCovMatrix(std::string resultType  = "2D", std::string channel = "mu
   //file_name = "~/work/DY/input2D_18.07.12/resFSRMatrixProd_HLT_Mu13_Mu8_40bins_fullpowheg_InAcc.root";
   file_name = "resFSRMatrixProd_2Dunfold_InAcc.root";
   if("1D"==resultType){
-    //if("mu"==channel){
-      file_name = "FSRresMatrixProd_tmp2014_41bin.root";
-    //}
-    //else{
+    if("mu"==channel){
+      file_name = "FSRresMatrixProd_tmp2014.root";
+    }
+    else{
       //file_name = "dyee_fsrResponse_1D-20121113.root";
-    //  file_name = "EEFSRresMatrixProd_tmp2014.root";
-    //}
+      file_name = "EEFSRresMatrixProd_tmp2014.root";
+    }
   } else {
-     //if ("mu"!=channel) file_name = "EEFSRresMatrixProd_2D_tmp.root";
+     if ("mu"!=channel) file_name = "EEFSRresMatrixProd_2D_tmp.root";
   }
 
   file_name = directoryName + file_name;
@@ -664,7 +664,7 @@ void estimateCovMatrix(std::string resultType  = "2D", std::string channel = "mu
   int allBins = 132;
   if("1D"==resultType){
     normalization_data = normalization_data_1D;
-    allBins = 41;
+    allBins = 40;
   }
   int const nBins = allBins;
  
@@ -720,13 +720,13 @@ void estimateCovMatrix(std::string resultType  = "2D", std::string channel = "mu
   std::string matrixName = "hden"; //"migMatrix";
   if (resultType == "2D") matrixName = "hden2";
   if("el"==channel){
-    //matrixName = "DetResponse";
+    matrixName = "DetResponse";
   }
   TH2D * h2_responceMatrix;
   TH2D* hmig;
   TH1D* _inTrue;
 
-  //if ("el"!=channel) {
+  if ("el"!=channel) {
      if (resultType != "2D") {
        hmig = (TH2D*)(*(DataFiles[1])).Get("hden");
        _inTrue = (TH1D*)(*(DataFiles[1])).Get("htrue");
@@ -736,9 +736,9 @@ void estimateCovMatrix(std::string resultType  = "2D", std::string channel = "mu
      }
      h2_responceMatrix  = getMigMatrix(_inTrue, hmig);
  
-  //} else {
-  //   h2_responceMatrix = (TH2D*)(*(DataFiles[1])).Get(matrixName.c_str());
-  //}
+  } else {
+     h2_responceMatrix = (TH2D*)(*(DataFiles[1])).Get(matrixName.c_str());
+  }
 
   //TMatrixT <double>  responseMatrix_read(nBins,nBins);
   //readMatrix ( h2_responceMatrix, responseMatrix_read);
@@ -860,7 +860,7 @@ void estimateCovMatrix(std::string resultType  = "2D", std::string channel = "mu
   TH2D* hmig;
   TH1D* _inTrue;
 
-  //if ("el"!=channel) {
+  if ("el"!=channel) {
      if (resultType != "2D") {
        hmig = (TH2D*)(*(DataFiles[2])).Get("hden");
        _inTrue = (TH1D*)(*(DataFiles[2])).Get("hpreFSR");
@@ -869,9 +869,9 @@ void estimateCovMatrix(std::string resultType  = "2D", std::string channel = "mu
        _inTrue = (TH1D*)(*(DataFiles[2])).Get("hpreFSR");
      } 
      h2_responceMatrix_FSR  = getMigMatrix(_inTrue, hmig);
-  //} else {
-  //   h2_responceMatrix_FSR = (TH2D*)(*(DataFiles[2])).Get(matrixName.c_str());
-  //}
+  } else {
+     h2_responceMatrix_FSR = (TH2D*)(*(DataFiles[2])).Get(matrixName.c_str());
+  }
   TMatrixT <double>  responseMatrix_FSR(nBins,nBins);
   cout << "1before readmatrix2"<< endl;
   readMatrix ( h2_responceMatrix_FSR, responseMatrix_FSR);
@@ -1118,7 +1118,7 @@ void estimateChi2(int binsRegion_min, int binsRegion_max, std::string resultType
   if("1D"==resultType){
     normalization_data = normalization_data_1D;
     normalization_Theory = normalization_Theory_1D;
-    allBins = 41;
+    allBins = 40;
     //binsRegion_min = 1;
     //binsRegion_max = 8;
 
