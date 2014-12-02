@@ -50,8 +50,6 @@ double deltaR(double eta1, double phi1, double eta2, double phi2) {
 
 EventSelector_CP::EventSelector_CP(TTree* ) : fNumberOfEvents(0), fNumberOfGoodEvents(0), fTotalDataSize(0)
 {
-
-  cout << "1" << endl;
  
   //set the luminosity in a given run range
   //if normalization to luminosity is used  
@@ -403,7 +401,7 @@ Bool_t EventSelector_CP::Process(Long64_t entry)
 
 
      //split data mc
-     if (dataset.Contains("Data")) {
+     if (dataset.Contains("Data") || dataset.Contains("DATA")) {
         isMC = false;
         if (trig != 0) continue; 
      }
@@ -569,9 +567,6 @@ Bool_t EventSelector_CP::Process(Long64_t entry)
      double best_val = -99999;
      int multiplePairsSurvive = 0;
      for( int j = 0; j < nPair; j++ ) {
-
-        if( Muon1_muonType[j] != 1 ) continue;
-        if( Muon2_muonType[j] != 1 ) continue;
 
          if (histogramThis != "pT") {
            if( Muon1_pT[j] < 20 || Muon2_pT[j] < 10 ) {
