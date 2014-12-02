@@ -6,43 +6,43 @@ void analyseYield_p3(const char* WHICHHIST, const char* NTUPLEWEIGHT, const char
 
   // EWK
   TFileCollection* c6 = new TFileCollection("WJets","WJets");
-  c6->Add(protocol+dirname+"WJets_PU"+"/*.root");
+  c6->Add(protocol+dirname+"WJets_Light"+"/*.root");
 
   // diboson
   TFileCollection* c7a = new TFileCollection("WZJetsTo3LNu","WZJetsTo3LNu");
-  c7a->Add(protocol+dirname+"WZJetsTo3LNu_PU"+"/*.root");
+  c7a->Add(protocol+dirname+"WZJetsTo3LNu_Light"+"/*.root");
 
   TFileCollection* c7b = new TFileCollection("WZJetsTo2L2Q","WZJetsTo2L2Q");
-  c7b->Add(protocol+dirname+"WZJetsTo2L2Q_PU"+"/*.root");
+  c7b->Add(protocol+dirname+"WZJetsTo2L2Q_Light"+"/*.root");
 
   TFileCollection* c7c = new TFileCollection("ZZJetsTo2L2Nu","ZZJetsTo2L2Nu");
-  c7c->Add(protocol+dirname+"ZZJetsTo2L2Nu_PU"+"/*.root");
+  c7c->Add(protocol+dirname+"ZZJetsTo2L2Nu_Light"+"/*.root");
 
   TFileCollection* c7d = new TFileCollection("ZZJetsTo4L","ZZJetsTo4L");
-  c7d->Add(protocol+dirname+"ZZJetsTo4L_PU"+"/*.root");
+  c7d->Add(protocol+dirname+"ZZJetsTo4L_Light"+"/*.root");
 
   TFileCollection* c7e = new TFileCollection("ZZJetsTo2L2Q","ZZJetsTo2L2Q");
-  c7e->Add(protocol+dirname+"ZZJetsTo2L2Q_PU"+"/*.root");
+  c7e->Add(protocol+dirname+"ZZJetsTo2L2Q_Light"+"/*.root");
 
   TFileCollection* c7f = new TFileCollection("WWJetsTo2L2Nu","WWJetsTo2L2Nu");
-  c7f->Add(protocol+dirname+"WWJetsTo2L2Nu_PU"+"/*.root");
+  c7f->Add(protocol+dirname+"WWJetsTo2L2Nu_Light"+"/*.root");
 
   //ttbar
   TFileCollection* c8a = new TFileCollection("tW","tW");
-  c8a->Add(protocol+dirname+"tW_PU"+"/*.root");
+  c8a->Add(protocol+dirname+"tW_Light"+"/*.root");
 
   TFileCollection* c8b = new TFileCollection("tbarW","tbarW");
-  c8b->Add(protocol+dirname+"tbarW_PU"+"/*.root");
+  c8b->Add(protocol+dirname+"tbarW_Light"+"/*.root");
 
   TFileCollection* c8c = new TFileCollection("tt1000","ttbar1000");
-  c8c->Add(protocol+dirname+"tt1000_PU"+"/*.root");
+  c8c->Add(protocol+dirname+"tt1000_Light"+"/*.root");
 
   TFileCollection* c8d = new TFileCollection("tt700","ttbar700");
-  c8d->Add(protocol+dirname+"tt700_PU"+"/*.root");
+  c8d->Add(protocol+dirname+"tt700_Light"+"/*.root");
 
   TFileCollection* c8e = new TFileCollection("ttjets","ttjets");
-  c8e->Add(protocol+dirname+"ttjets_PU_p1"+"/*.root");
-  c8e->Add(protocol+dirname+"ttjets_PU_p2"+"/*.root");
+  c8e->Add(protocol+dirname+"ttjets_v1_Light"+"/*.root");
+  c8e->Add(protocol+dirname+"ttjets_v2_Light"+"/*.root");
 
   gEnv->SetValue("ProofLite.Sandbox", "/home/asvyatko/DYStudy/CMSSW_5_3_3_patch2/src/DimuonAnalysis/DYPackage/test/ControlPlots/proofbox_p3/");
   TProof* p = TProof::Open("workers=15"); ////proof://pccmspurdue3:-1"); // set number of works to 2:  TProof::Open("//lite:///?workers=2");
