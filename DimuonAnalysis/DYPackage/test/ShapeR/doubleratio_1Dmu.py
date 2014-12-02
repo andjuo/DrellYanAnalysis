@@ -8,12 +8,6 @@ import sys, os
 from rshape_tools import *
 
 xAxis = [15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 64, 68, 72, 76, 81, 86, 91, 96, 101, 106, 110, 115, 120, 126, 133, 141, 150, 160, 171, 185, 200, 220, 243, 273, 320, 380, 440, 510, 600, 1000, 1500]
-fullDET = 'full'
-geoTest = False
-
-#FIXME Alexey test
-fgeo = TFile('/home/asvyatko/DYStudy/CMSSW_5_3_3_patch2/src/DimuonAnalysis/DYPackage/test/AccEffMCtruth/geo_corr_test.root')
-hgeo_corr = fgeo.Get('geo_corr')
 
 #get 8tev muon uncertainty inputs
 fsyst_mu1D = TFile('../Inputs/sys/muonSystAll_1D.root')	
@@ -38,7 +32,7 @@ acc_syst8= fsyst_mu1D.Get('acc_syst')
 
 #get muon rshape ? or absolute cross section
 #we will get the absolute cross section
-f_mu1D = TFile('../Outputs/absex_'+fullDET+'_Bayesian.root')
+f_mu1D = TFile('../Outputs/absex_full_Bayesian.root')
 mu_xsec41 = f_mu1D.Get('hxsec')
 #remove 41st bin
 mu_xsec = TH1D('hxsec','hxsec',40,array('d',xAxis))
@@ -46,13 +40,7 @@ for i in range(mu_xsec.GetNbinsX()):
     mu_xsec.SetBinContent(i+1,mu_xsec41.GetBinContent(i+1))
 #peak cross section and associated error
 mu_peak = 1135.4 
-if fullDET == 'DET': mu_peak = 570.5
 mu_peak_err = sqrt(pow(11.2/mu_peak,2)+pow(25.1/mu_peak,2))
-if fullDET == 'DET': mu_peak_err = sqrt(pow(5.7/mu_peak,2)+pow(14.8/mu_peak,2))
-
-if geoTest: 
-    mu_peak = 1135.4*1.03
-    mu_peak_err = sqrt(pow(11.2/mu_peak,2)+pow(25.1/mu_peak,2))
 
 #calculate shape
 for i in range(mu_xsec.GetXaxis().GetNbins()):
@@ -83,22 +71,12 @@ acc_syst7= fsyst_mu1D_7TeV.Get('acc_syst')
 #    print mod_syst7.GetBinContent(i+1)*100.
 
 #get rshape at 7 TeV
-fname = "rshape_full_mumuCurrentMarch.root"
-if fullDET == 'DET': fname = "rshape_full_3.root"
-fmu_7TeV = TFile("/group/cms/users/asvyatko/CMSSW_4_2_8/src/DYPackage/Outputs/"+fname)
-print "/group/cms/users/asvyatko/CMSSW_4_2_8/src/DYPackage/Outputs/"+fname
+fmu_7TeV = TFile("../Outputs/rshape_full_mumuCurrentMarch.root")
 mu_xsec7 = fmu_7TeV.Get('hxsec')
 
 #peak cross section and associated error
 mu_peak7 = 989.5
 mu_peak_err7 = sqrt(pow(9.8/mu_peak7,2)+pow(21.9/mu_peak7,2))
-if fullDET == 'DET': mu_peak7 = 524.7
-if fullDET == 'DET': mu_peak_err7 = sqrt(pow(5.1/mu_peak7,2)+pow(11.5/mu_peak7,2))
-
-if geoTest: 
-    mu_peak7 = 989.5
-    mu_peak_err7 = sqrt(pow(9.8/mu_peak7,2)+pow(21.9/mu_peak7,2))
-
 
 #calculate the ratio, set all errors to 0
 hratio = mu_xsec.Clone()
@@ -106,9 +84,6 @@ hratio.Divide(mu_xsec,mu_xsec7)
 #set zero errors
 for i in range(hratio.GetXaxis().GetNbins()):
       hratio.SetBinError(i+1,0)
-      #FIXME
-      if geoTest: hratio.SetBinContent(i+1,hratio.GetBinContent(i+1)/hgeo_corr.GetBinContent(i+1))
-   
 
 #double ratio uncertainties
 
@@ -173,7 +148,6 @@ for i in range(hratio.GetXaxis().GetNbins()):
       if i < 10 or i > 22: hratio.SetBinError(i+1, hratio.GetBinContent(i+1)*sqrt(pow(total_unc.GetBinContent(i+1),2)+pow(0.005,2)))
       else: hratio.SetBinError(i+1, hratio.GetBinContent(i+1)*total_unc.GetBinContent(i+1))
 
-if geoTest: fullDET = 'geoDET'
-fout = TFile('doubleratio_1Dmu_'+fullDET+'_Bayesian.root','recreate')
+fout = TFile('doubleratio_1Dmu_full_Bayesian.root','recreate')
 hratio.Write()
 fout.Close()
