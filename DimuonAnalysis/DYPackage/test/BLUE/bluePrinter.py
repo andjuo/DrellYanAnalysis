@@ -7,8 +7,7 @@
 
 from ROOT import *
 
-
-fin = TFile("crosssection.root")
+fin = TFile("../Outputs/absex_full_comb_PI_Bayesian.root")
 fin.cd()
 hxsec = fin.Get('hxsec')
 peak = 1. #1135.4 #1134.6

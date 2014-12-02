@@ -25,26 +25,28 @@ and associated equipment 500.1-3 (2003):391
 #include <stdio.h>
 #include <math.h>
 #include <cmath>
-#ifndef VECTOR
-#define VECTOR
+//#ifndef VECTOR
+//#define VECTOR
 #include <vector>
-#endif
+//#endif
 
 #include <iostream>
 
 void readDataVector(const char * name, TVectorD& dv, double binLimits[][2] = 0, int ftr = 1, double* ccCovar = NULL);
 void readCovMatrix(const char * name, TMatrixT<double>& dv);
 void simpleMatrixDivider(TMatrixT<double>& mat, double factor, bool multiply);
+void simpleMatrixDividerCustom(TMatrixT<double>& mat);
 
 //const int theNBins = 2;
 //Double_t mBins[theNBins+1] = {15, 20,25};
-const int theNBins = 40;
-Double_t mBins[theNBins+1] = {15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 64, 68, 72, 76, 81, 86, 91, 96, 101, 106, 110, 115, 120, 126, 133, 141, 150, 160, 171, 185, 200, 220, 243, 273, 320, 380, 440, 510, 600, 1000, 1500};
+const int theNBins = 41;
+Double_t mBins[theNBins+1] = {15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 64, 68, 72, 76, 81, 86, 91, 96, 101, 106, 110, 115, 120, 126, 133, 141, 150, 160, 171, 185, 200, 220, 243, 273, 320, 380, 440, 510, 600, 1000, 1500, 2000};
 
 void resultCombiner(const char * name_dv1, const char * name_cm1, const char* slength1, const char * name_dv2, const char * name_cm2, const char* slength2, int ftr = 1, const char * outputNameStub = "output")
 {
-    const int length1 = 40; //atoi(slength1);
-    const int length2 = 40; //atoi(slength2);
+    const int length1 = 41; //atoi(slength1);
+    const int length2 = 41; //atoi(slength2);
+    bool diag_only = false;
 
     TVectorD dv1(length1), dv2(length2);
     TMatrixT<double> cm1(length1, length1), cm2(length2, length2);
@@ -52,26 +54,30 @@ void resultCombiner(const char * name_dv1, const char * name_cm1, const char* sl
 
     readDataVector(name_dv1, dv1, binLimits1, ftr, ccCov1);
     printf("Read data vector 1 (%d)\n",length1);
+    //for(int i = 0;i<length1;++i){
+      //std::cout<<" i = "<<i<<" dv1[i] = "<<dv1(i)<<std::endl;
+    //}
 
     readDataVector(name_dv2, dv2, binLimits2, ftr, ccCov2);
     printf("Read data vector 2 (%d)\n",length2);
 
     readCovMatrix(name_cm1, cm1);
     printf("Read covariance matrix 1\n");
-    simpleMatrixDivider(cm1, 1000000000000000., true);
+    simpleMatrixDividerCustom(cm1);
 
     readCovMatrix(name_cm2, cm2);
     printf("Read covariance matrix 2\n");
-    simpleMatrixDivider(cm2, 1000000000000000., true);
+    //simpleMatrixDivider(cm2, 1000000000000000., true, diag_only);
 
     std::vector<double*> binLimits;
-    std::vector<std::vector<int > > preU;
+    std::vector<std::vector<int> > preU;
     int i1 = 0, i2 = 0;
    std::cout<<"00000"<<std::endl;
     while(i1 < length1 || i2 < length2)
     {
         if(i1 < length1 && i2 < length2)
         {
+            //std::cout<<" i1 = "<<i1<<" i2 = "<<i2<<" L1[i1][1] = "<<binLimits1[i1][1]<<" L1[i1][0] = "<<binLimits1[i1][0]<<" L2[i2][1] = "<<binLimits2[i2][1]<<" L2[i2][0] = "<<binLimits2[i2][0]<<std::endl;
             if((binLimits1[i1][1] + binLimits1[i1][0])/2 > binLimits2[i2][0] && (binLimits1[i1][1] + binLimits1[i1][0])/2 < binLimits2[i2][1])
             {
                 binLimits.push_back(binLimits1[i1]);
@@ -192,11 +198,11 @@ void resultCombiner(const char * name_dv1, const char * name_cm1, const char* sl
     TVectorD bV = lambda*dv;
     cout << "bV final result vector" << endl;
     bV.Print();
-    //simpleDataVectorDivider(bV,100000000.);
+    ////simpleDataVectorDivider(bV,100000000.);
     std::cout<<" Invert Ut * cmInv * U"<<std::endl;
     TMatrixT<double> bcm = (Ut * cmInv * U).Invert();
     cout << "bcm final covariance matrix" << endl;
-    simpleMatrixDivider(bcm, 1000000000000000., false);
+    //simpleMatrixDivider(bcm, 1000000000000000., false, diag_only);
     bcm.Print();
 
     bV.Draw();
@@ -211,8 +217,8 @@ void resultCombiner(const char * name_dv1, const char * name_cm1, const char* sl
     printf("Done with combination.\n");
 
     // write the provided input in readable format (like the output)
-    simpleMatrixDivider(cm1, 1000000000000000., false);
-    simpleMatrixDivider(cm2, 1000000000000000., false);
+    //simpleMatrixDivider(cm1, 1000000000000000., false, diag_only);
+    //simpleMatrixDivider(cm2, 1000000000000000., false, diag_only);
     FILE *file_input;
     char bVinName[128], CMinName[128];
     sprintf(bVinName, "input_data1.txt");
@@ -330,7 +336,21 @@ void readDataVector(const char * name, TVectorD& dv, double binLimits[][2], int 
     return;
 }
 
-void simpleMatrixDivider(TMatrixT<double>& mat, double factor, bool multiply) { 
+void simpleMatrixDividerCustom(TMatrixT<double>& mat) {
+     
+     const int theNBins = 41;
+     Double_t mass_xbin[theNBins+1] = {15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 64, 68, 72, 76, 81, 86, 91, 96, 101, 106, 110, 115, 120, 126, 133, 141, 150, 160, 171, 185, 200, 220, 243, 273, 320, 380, 440, 510, 600, 1000, 1500, 2000};
+
+     for(int i = 0; i < mat.GetNrows(); i++)
+     {  
+         for(int j = 0; j < mat.GetNcols(); j++)
+         {   
+              mat[i][j] /= (mass_xbin[i+1]-mass_xbin[i])*(mass_xbin[j+1]-mass_xbin[j]);
+         }
+     }
+}
+
+void simpleMatrixDivider(TMatrixT<double>& mat, double factor, bool multiply, bool diagonal_only) { 
 
      for(int i = 0; i < mat.GetNrows(); i++)
       {
@@ -338,8 +358,10 @@ void simpleMatrixDivider(TMatrixT<double>& mat, double factor, bool multiply) {
             {
                 if (multiply) {
                      mat[i][j] *= factor;
+                     if (i!=j && diagonal_only) mat[i][j] = 0; 
                 } else {
                      mat[i][j] /= factor;
+                     if (i!=j && diagonal_only) mat[i][j] = 0;
                 }
            }
        }

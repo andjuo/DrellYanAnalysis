@@ -20,4 +20,4 @@ name_cm2 = 'covForBlue-2D-absolute_MuMu.dat'
 length2 = '132' 
 
 #analyzers
-Popen('root -b -l -q \'resultCombiner_tester_2D.C(\"'+name_dv1+'\",\"'+name_cm1+'\",\"'+length1+'\",\"'+name_dv2+'\",\"'+name_cm2+'\",\"'+length2+'\")\'',shell=True).wait()
+Popen('root -b -l -q \'resultCombiner_2D.C(\"'+name_dv1+'\",\"'+name_cm1+'\",\"'+length1+'\",\"'+name_dv2+'\",\"'+name_cm2+'\",\"'+length2+'\")\'',shell=True).wait()

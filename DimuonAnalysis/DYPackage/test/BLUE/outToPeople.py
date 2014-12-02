@@ -20,7 +20,7 @@ r_vals = np.loadtxt(ifile_data)
 #fin_systacc = TFile('../Outputs/syst_acc.root')
 #hacc_syst = fin_systacc.Get('modeling_2012')
 
-fin_systacc = TFile('/home/asvyatko/DYStudy/CMSSW_5_3_3_patch2/src/DimuonAnalysis/DYPackage/test/Outputs/syst_acc.root')
+fin_systacc = TFile('../Inputs/sys/syst_acc.root')
 hacc_syst = fin_systacc.Get('invm_FEWZ41')
 
 fout = TFile('rshape_comb_41bin.root','recreate')
